@@ -1,7 +1,6 @@
 {
   "name": "discord-bot",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "dependencies": {
     "discord": "^0.8.2",
@@ -15,5 +14,15 @@
     "start": "node index.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/btror/discord-bot-node.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/btror/discord-bot-node/issues"
+  },
+  "homepage": "https://github.com/btror/discord-bot-node#readme",
+  "description": ""
 }
