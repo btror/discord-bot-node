@@ -1,6 +1,9 @@
 require("dotenv").config();
+
 const Discord = require("discord.js");
 const bot = new Discord.Client();
+const cheerio = require('cheerio');
+const request = require('request');
 
 const TOKEN = process.env.TOKEN;
 
@@ -13,12 +16,6 @@ bot.on("ready", () => {
 // commands
 
 bot.on("message", (msg) => {
-  // test command
-  if (msg.content === "ping") {
-    //msg.reply("pong");
-    msg.channel.send("pong");
-  }
-
   // poll command
   if (msg.content.includes("!poll") && !msg.author.bot) {
     // make sure user input has something after !poll
@@ -59,7 +56,6 @@ bot.on("message", (msg) => {
           embed.setTimestamp();
           embed.setDescription(content[0]);
 
-          
           var letters = [
             "0",
             "🇦",
@@ -112,6 +108,65 @@ bot.on("message", (msg) => {
       }
     }
   }
+
+  // "I'm" troll
+  if ((msg.content.includes("im") || msg.content.includes("IM") || msg.content.includes("Im") || msg.content.includes("I'm") || msg.content.includes("i'm") || msg.content.includes("I'M")) && !msg.author.bot) {
+    // get all words after the word "I'm"
+    var start = 0;
+    for (var i = 0; i < msg.content.length; i++) {
+      if (msg.content.charAt(i) == " ") {
+        start = i;
+        break;
+      }
+    }
+    var firstWord = "";
+    firstWord = msg.content.substring(start, msg.content.length);
+
+    if (!msg.author.bot) {
+      msg.channel.send("Hello" + firstWord + ", I'm Utility Bot!");
+    }
+  }
+
+  // search images
+  if (msg.content.includes("!getpic") && !msg.author.bot) {
+
+    // content after command
+    var searchWord = msg.content.substring(8, msg.content.length);
+
+    var options = {
+      url: "http://results.dogpile.com/serp?qc=images&q=" + searchWord,
+      method: "GET",
+      headers: {
+        "Accept": "text/html",
+        "User-Agent": "Chrome"
+      }
+    }
+
+    request(options, function(error, response, responseBody) {
+      if (error) {
+        return
+      }
+
+      $ = cheerio.load(responseBody);
+      
+      var links = $(".image a.link");
+
+      var urls = new Array(links.length).fill(0).map((v, i) => links.eq(i).attr("href"));
+
+      console.log(urls);
+
+      if(!urls.length) {
+
+        return;
+      }
+
+      msg.channel.send(urls[Math.floor(Math.random() * urls.length)] + " " );
+
+    })
+    
+  }
+
+
 });
 
 process.on("SIGINT", function () {
