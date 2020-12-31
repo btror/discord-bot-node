@@ -2,8 +2,9 @@ require("dotenv").config();
 
 const Discord = require("discord.js");
 const bot = new Discord.Client();
-const cheerio = require('cheerio');
-const request = require('request');
+const cheerio = require("cheerio");
+const request = require("request");
+const ud = require("urban-dictionary");
 
 const TOKEN = process.env.TOKEN;
 
@@ -14,7 +15,6 @@ bot.on("ready", () => {
 });
 
 // commands
-
 bot.on("message", (msg) => {
   // poll command
   if (msg.content.includes("!poll") && !msg.author.bot) {
@@ -110,7 +110,12 @@ bot.on("message", (msg) => {
   }
 
   // "I'm" troll
-  if ((msg.content.includes("im") || msg.content.includes("IM") || msg.content.includes("Im") || msg.content.includes("I'm") || msg.content.includes("i'm") || msg.content.includes("I'M")) && !msg.author.bot) {
+  if (
+    (msg.content.includes(" I'm ") ||
+      msg.content.includes(" i'm ") ||
+      msg.content.includes(" I'M ")) &&
+    !msg.author.bot
+  ) {
     // get all words after the word "I'm"
     var start = 0;
     for (var i = 0; i < msg.content.length; i++) {
@@ -128,7 +133,14 @@ bot.on("message", (msg) => {
   }
 
   // search images
-  if (msg.content.includes("!getpic") && !msg.author.bot) {
+  if (
+    (msg.content.includes("!getpic") || msg.content.includes("/getpic")) &&
+    !msg.author.bot
+  ) {
+    // hide message if it contains a slash
+    if (msg.content.charAt(0) == "/") {
+      msg.delete();
+    }
 
     // content after command
     var searchWord = msg.content.substring(8, msg.content.length);
@@ -137,36 +149,43 @@ bot.on("message", (msg) => {
       url: "http://results.dogpile.com/serp?qc=images&q=" + searchWord,
       method: "GET",
       headers: {
-        "Accept": "text/html",
-        "User-Agent": "Chrome"
-      }
-    }
+        Accept: "text/html",
+        "User-Agent": "Chrome",
+      },
+    };
 
-    request(options, function(error, response, responseBody) {
+    request(options, function (error, response, responseBody) {
       if (error) {
-        return
-      }
-
-      $ = cheerio.load(responseBody);
-      
-      var links = $(".image a.link");
-
-      var urls = new Array(links.length).fill(0).map((v, i) => links.eq(i).attr("href"));
-
-      console.log(urls);
-
-      if(!urls.length) {
-
         return;
       }
+      $ = cheerio.load(responseBody);
+      var links = $(".image a.link");
+      var urls = new Array(links.length)
+        .fill(0)
+        .map((v, i) => links.eq(i).attr("href"));
 
-      msg.channel.send(urls[Math.floor(Math.random() * urls.length)] + " " );
-
-    })
-    
+      if (!urls.length) {
+        return;
+      }
+      msg.channel.send(urls[Math.floor(Math.random() * urls.length)] + " ");
+    });
   }
 
+  // define a word
+  if (msg.content.startsWith("!define") && !msg.author.bot) {
+    var word = msg.content.substring(8, msg.content.length);
 
+    ud.define(word)
+      .then((results) => {
+        console.log(results[0].definition);
+        var def = results[0].definition;
+        def = def.substring(0, 1999);
+        msg.channel.send(def);
+      })
+      .catch((error) => {
+        console.error(`define (promise) - error ${error.message}`);
+      });
+  }
 });
 
 process.on("SIGINT", function () {
