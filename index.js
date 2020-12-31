@@ -59,6 +59,7 @@ bot.on("message", (msg) => {
           embed.setTimestamp();
           embed.setDescription(content[0]);
 
+          
           var letters = [
             "0",
             "🇦",
