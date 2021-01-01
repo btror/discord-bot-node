@@ -111,24 +111,27 @@ bot.on("message", (msg) => {
 
   // "I'm" troll
   if (
-    (msg.content.includes(" I'm ") ||
-      msg.content.includes(" i'm ") ||
-      msg.content.includes(" I'M ")) &&
+    (msg.content.includes("I'm ") ||
+      msg.content.includes("i'm ") ||
+      msg.content.includes("I'M ")) &&
     !msg.author.bot
   ) {
-    // get all words after the word "I'm"
-    var start = 0;
-    for (var i = 0; i < msg.content.length; i++) {
-      if (msg.content.charAt(i) == " ") {
-        start = i;
-        break;
-      }
+    var word = "";
+    if (msg.content.includes("I'm ")) {
+      word = "I'm";
+    } else if (msg.content.includes("i'm")) {
+      word = "i'm";
+    } else if (msg.content.includes("I'M")) {
+      word = "I'M";
     }
-    var firstWord = "";
-    firstWord = msg.content.substring(start, msg.content.length);
+
+    var contentBreak = msg.content.split(word);
+    console.log(contentBreak.length);
+    console.log("1 " + contentBreak[0]);
+    console.log("2 " + contentBreak[1]);
 
     if (!msg.author.bot) {
-      msg.channel.send("Hello" + firstWord + ", I'm Utility Bot!");
+      msg.channel.send("Hello" + contentBreak[1] + ", I'm Utility Bot!");
     }
   }
 
@@ -185,6 +188,42 @@ bot.on("message", (msg) => {
       .catch((error) => {
         console.error(`define (promise) - error ${error.message}`);
       });
+  }
+
+  // commands list
+  if (msg.content == "!utilitycommands" && !msg.author.bot) {
+    const embed = new Discord.MessageEmbed();
+    embed
+      .setColor("#0099ff")
+      .setTitle("Utility Bot")
+      .setURL("https://github.com/btror/discord-bot-node")
+      .setAuthor("Bot by btror")
+      .setDescription("list of available commands")
+      .addFields(
+        {
+          name: "!poll",
+          value:
+            'syntax: !poll "question" "choice a" "choice b" "choice c" "etc..."\nabout: allows people in a server to vote on something through reactions (must type questions and answers inside of quotes)',
+        },
+        {
+          name: "!getpic or /getpic",
+          value:
+            "syntax: !getpic <any word>\nabout: allows people in a server to get pictures of something without having to search for it (do not include <> just type the word or phrase after the command)",
+        },
+        {
+          name: "!define",
+          value:
+            "syntax: !define <any word>\nabout: allows people in a server to find the definition of a word without having to search for it (do not include <> just type the word or phrase after the command)",
+        },
+        {
+          name: "!utilitycommands",
+          value:
+            "syntax: !utilitycommands\nabout: shows all available bot commands",
+        }
+      )
+      .setFooter("see on GitHub: https://github.com/btror/discord-bot-node");
+
+    msg.channel.send(embed);
   }
 });
 
