@@ -5,6 +5,7 @@ const bot = new Discord.Client();
 const cheerio = require("cheerio");
 const request = require("request");
 const ud = require("urban-dictionary");
+const discordEmoji = require("discord-emoji");
 
 const TOKEN = process.env.TOKEN;
 
@@ -58,32 +59,32 @@ bot.on("message", (msg) => {
 
           var letters = [
             "0",
-            "🇦",
-            "🇧",
-            "🇨",
-            "🇩",
-            "🇪",
-            "🇫",
-            "🇬",
-            "🇭",
-            "🇮",
-            "🇯",
-            "🇰",
-            "🇱",
-            "🇲",
-            "🇳",
-            "🇴",
-            "🇵",
-            "🇶",
-            "🇷",
-            "🇸",
-            "🇹",
-            "🇺",
-            "🇻",
-            "🇼",
-            "🇽",
-            "🇾",
-            "🇿",
+            discordEmoji.symbols.regional_indicator_a,
+            discordEmoji.symbols.regional_indicator_b,
+            discordEmoji.symbols.regional_indicator_c,
+            discordEmoji.symbols.regional_indicator_d,
+            discordEmoji.symbols.regional_indicator_e,
+            discordEmoji.symbols.regional_indicator_f,
+            discordEmoji.symbols.regional_indicator_g,
+            discordEmoji.symbols.regional_indicator_h,
+            discordEmoji.symbols.regional_indicator_i,
+            discordEmoji.symbols.regional_indicator_j,
+            discordEmoji.symbols.regional_indicator_k,
+            discordEmoji.symbols.regional_indicator_l,
+            discordEmoji.symbols.regional_indicator_m,
+            discordEmoji.symbols.regional_indicator_n,
+            discordEmoji.symbols.regional_indicator_o,
+            discordEmoji.symbols.regional_indicator_p,
+            discordEmoji.symbols.regional_indicator_q,
+            discordEmoji.symbols.regional_indicator_r,
+            discordEmoji.symbols.regional_indicator_s,
+            discordEmoji.symbols.regional_indicator_t,
+            discordEmoji.symbols.regional_indicator_u,
+            discordEmoji.symbols.regional_indicator_v,
+            discordEmoji.symbols.regional_indicator_w,
+            discordEmoji.symbols.regional_indicator_x,
+            discordEmoji.symbols.regional_indicator_y,
+            discordEmoji.symbols.regional_indicator_z,
           ];
           for (var i = 1; i < content.length; i++) {
             embed.addField(letters[i], content[i], false);
@@ -95,10 +96,10 @@ bot.on("message", (msg) => {
           );
 
           msg.channel
-            .send(embed)
-            .then(function (msg) {
-              for (var i = 0; i < content.length; i++) {
-                msg.react(letters[i]);
+            .send({ embed: embed })
+            .then((embedMessage) => {
+              for (var i = 1; i < content.length; i++) {
+                embedMessage.react(letters[i]);
               }
             })
             .catch(Discord.DiscordAPIError);
@@ -190,6 +191,14 @@ bot.on("message", (msg) => {
       });
   }
 
+  // spam user
+  if (msg.content.startsWith("!spam") && !msg.author.bot) {
+    var user = msg.content.substring(6, msg.content.length);
+    for (var i = 0; i < 5; i++) {
+      msg.channel.send(user + "!!!");
+    }
+  }
+
   // commands list
   if (msg.content == "!utilitycommands" && !msg.author.bot) {
     const embed = new Discord.MessageEmbed();
@@ -214,6 +223,11 @@ bot.on("message", (msg) => {
           name: "!define",
           value:
             "syntax: !define <any word>\nabout: allows people in a server to find the definition of a word without having to search for it (do not include <> just type the word or phrase after the command)",
+        },
+        {
+          name: "!spam",
+          value:
+            "syntax: !spam <any word>\nabout: allows people in a server to spam a word or ping somebody multiple times (do not include <> just type the word or phrase after the command)",
         },
         {
           name: "!utilitycommands",
