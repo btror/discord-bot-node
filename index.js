@@ -7,6 +7,10 @@ const request = require("request");
 const ud = require("urban-dictionary");
 const discordEmoji = require("discord-emoji");
 
+const GIPHY_KEY = process.env.GIPHY_KEY;
+
+const giphy = require("giphy-api")(GIPHY_KEY);
+
 const TOKEN = process.env.TOKEN;
 
 bot.login(TOKEN);
@@ -138,7 +142,7 @@ bot.on("message", (msg) => {
 
   // search images
   if (
-    (msg.content.includes("!getpic") || msg.content.includes("/getpic")) &&
+    (msg.content.startsWith("!getpic") || msg.content.startsWith("/getpic")) &&
     !msg.author.bot
   ) {
     // hide message if it contains a slash
@@ -220,6 +224,11 @@ bot.on("message", (msg) => {
             "syntax: !getpic <any word>\nabout: allows people in a server to get pictures of something without having to search for it (do not include <> just type the word or phrase after the command)",
         },
         {
+          name: "!getgif or /getgif",
+          value:
+            "syntax: !getgif <any word>\nabout: allows people in a server to get gifs of something without having to search for it (do not include <> just type the word or phrase after the command)",
+        },
+        {
           name: "!define",
           value:
             "syntax: !define <any word>\nabout: allows people in a server to find the definition of a word without having to search for it (do not include <> just type the word or phrase after the command)",
@@ -238,6 +247,30 @@ bot.on("message", (msg) => {
       .setFooter("see on GitHub: https://github.com/btror/discord-bot-node");
 
     msg.channel.send(embed);
+  }
+
+  // gif command
+  if (
+    (msg.content.startsWith("!getgif") || msg.content.startsWith("/getgif")) &&
+    !msg.author.bot
+  ) {
+    // hide message if it contains a slash
+    if (msg.content.charAt(0) == "/") {
+      msg.delete();
+    }
+    var gifSearch = msg.content.substring(8, msg.content.length);
+
+    giphy
+      .random({
+        tag: gifSearch,
+        rating: "r",
+        fmt: "json",
+      })
+      .then((response) => {
+        var a = response.data.bitly_url;
+        console.log("a " + a);
+        msg.channel.send(a);
+      }).catch(console.log(msg.channel.send("Gif not found on Giphy. Try a different word.")));
   }
 });
 
