@@ -269,8 +269,13 @@ bot.on("message", (msg) => {
       .then((response) => {
         var a = response.data.bitly_url;
         console.log("a " + a);
-        msg.channel.send(a);
-      }).catch(console.log(msg.channel.send("Gif not found on Giphy. Try a different word.")));
+        if (a == null) {
+          msg.channel.send("Gif not found on Giphy. Try a different word.");
+        } else {
+          msg.channel.send(a);
+        }
+      })
+      .catch(Discord.DiscordAPIError);
   }
 });
 
