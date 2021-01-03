@@ -4,7 +4,9 @@ require("./BotCommands/searchGif.js")();
 require("./BotCommands/searchImage.js")();
 require("./BotCommands/definitionSearch.js")();
 require("./BotCommands/spam.js")();
-require("./BotCommands/listCommands")();
+require("./BotCommands/listCommands.js")();
+require("./BotCommands/rollDice.js")();
+require("./BotCommands/currencyManager.js")();
 
 module.exports = {
   searchGif,
@@ -13,5 +15,7 @@ module.exports = {
   imResponse,
   searchDefinition,
   spam,
-  listCommands
+  listCommands,
+  currencyManager,
+  getNetworth
 };

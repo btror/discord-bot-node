@@ -37,6 +37,11 @@ module.exports = function () {
               "syntax: !spam <any word>\nabout: allows people in a server to spam a word or ping somebody multiple times (do not include <> just type the word or phrase after the command)",
           },
           {
+            name: "!networth",
+            value:
+              "syntax: !networth\nabout: allows people in a server to track their server networth",
+          },
+          {
             name: "!utilitycommands",
             value:
               "syntax: !utilitycommands\nabout: shows all available bot commands",
