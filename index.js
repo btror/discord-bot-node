@@ -48,7 +48,6 @@ bot.on("message", (msg) => {
   // set mc server address
   commands.setmcaddress(msg);
 
-  commands.checkServerStatus(msg);
 
   // list bot commands command
   commands.listCommands(msg);

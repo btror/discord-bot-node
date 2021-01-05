@@ -22,5 +22,4 @@ module.exports = {
   getNetworth,
   mcserverStatus,
   setmcaddress,
-  checkServerStatus
 };
