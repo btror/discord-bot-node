@@ -5,7 +5,6 @@ const commands = require("./commands.js");
 const mongoose = require("mongoose");
 const Discord = require("discord.js");
 
-
 const bot = new Discord.Client();
 const db = require("./config/keys").MongoURI;
 const dbConnect = mongoose
@@ -42,6 +41,14 @@ bot.on("message", (msg) => {
 
   // spam command
   commands.spam(msg);
+
+  // mc server status command
+  commands.mcserverStatus(msg);
+
+  // set mc server address
+  commands.setmcaddress(msg);
+
+  commands.checkServerStatus(msg);
 
   // list bot commands command
   commands.listCommands(msg);

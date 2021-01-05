@@ -7,6 +7,8 @@ require("./BotCommands/spam.js")();
 require("./BotCommands/listCommands.js")();
 require("./BotCommands/rollDice.js")();
 require("./BotCommands/currencyManager.js")();
+require("./BotCommands/minecraftServer.js")();
+
 
 module.exports = {
   searchGif,
@@ -17,5 +19,8 @@ module.exports = {
   spam,
   listCommands,
   currencyManager,
-  getNetworth
+  getNetworth,
+  mcserverStatus,
+  setmcaddress,
+  checkServerStatus
 };
