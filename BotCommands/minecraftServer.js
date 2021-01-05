@@ -54,5 +54,42 @@ module.exports = function () {
 
         input.channel.send("server address set to " + ip);
       }
+    }),
+    (this.getServerInfo = function () {
+      var output = "incorrect server address or server does not exist";
+      util
+        .status(ip, {
+          port: port,
+          enableSRV: true,
+          timeout: 5000,
+          protocolVersion: 47,
+        })
+        .then((response) => {
+          var playerNames = [];
+          for (var i = 0; i < response.samplePlayers.length; i++) {
+            playerNames[i] = response.samplePlayers[i].name;
+          }
+
+          var mods = response.modInfo;
+          if (mods == null) {
+            mods = "none";
+          }
+
+          output =
+            "version: " +
+            response.version +
+            "\nonline: " +
+            response.onlinePlayers +
+            "\nplayer names: " +
+            playerNames +
+            "\nmods: " +
+            mods;
+        })
+        .catch((error) => {
+          output = "incorrect server address or server does not exist";
+          // throw error;
+        });
+
+      return output;
     });
 };

@@ -4,6 +4,7 @@ const commands = require("./commands.js");
 
 const mongoose = require("mongoose");
 const Discord = require("discord.js");
+const CronJob = require("cron").CronJob;
 
 const bot = new Discord.Client();
 const db = require("./config/keys").MongoURI;
@@ -18,6 +19,21 @@ bot.login(TOKEN);
 
 bot.on("ready", () => {
   console.info(`logged in as ${bot.user.tag}!`);
+
+  var t = bot.channels.cache.get("678358920019968040");
+  //t.send("test");
+
+  var job = new CronJob(
+    "0 */2 * * * *",
+    function () {;
+      console.log("message received every 2 hours");
+      t.send("👁️ ❤️ Kuzco")
+    },
+    null,
+    true,
+    "America/Los_Angeles"
+  );
+  job.start();
 });
 
 bot.on("message", (msg) => {
@@ -43,11 +59,10 @@ bot.on("message", (msg) => {
   commands.spam(msg);
 
   // mc server status command
-  commands.mcserverStatus(msg);
+  // commands.mcserverStatus(msg);
 
   // set mc server address
-  commands.setmcaddress(msg);
-
+  // commands.setmcaddress(msg);
 
   // list bot commands command
   commands.listCommands(msg);
