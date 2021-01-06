@@ -42,6 +42,16 @@ module.exports = function () {
               "syntax: !networth\nabout: allows people in a server to track their server networth",
           },
           {
+            name: "!setmcaddress",
+            value:
+              "syntax: !setmcaddress <server address>\nabout: allows people to add a Minecraft server address to the bot, which can be tracked using the !mcserver command (do not include <> just type the word or phrase after the command)",
+          },
+          {
+            name: "!mcserver",
+            value:
+              "syntax: !mcserver\nabout: allows people in a server to track the status of a Minecraft server",
+          },
+          {
             name: "!utilitycommands",
             value:
               "syntax: !utilitycommands\nabout: shows all available bot commands",

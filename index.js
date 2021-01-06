@@ -24,7 +24,7 @@ bot.on("ready", () => {
   //t.send("test");
 
   var job = new CronJob(
-    "0 */2 * * * *",
+    "0 */2 * * *",
     function () {;
       console.log("message received every 2 hours");
       t.send("👁️ ❤️ Kuzco")
@@ -59,10 +59,10 @@ bot.on("message", (msg) => {
   commands.spam(msg);
 
   // mc server status command
-  // commands.mcserverStatus(msg);
+  commands.mcserverStatus(msg);
 
   // set mc server address
-  // commands.setmcaddress(msg);
+  commands.setmcaddress(msg);
 
   // list bot commands command
   commands.listCommands(msg);

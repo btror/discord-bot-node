@@ -1,4 +1,5 @@
 const util = require("minecraft-server-util");
+const Discord = require("discord.js");
 // var CronJob = require("cron").CronJob;
 
 module.exports = function () {
@@ -6,41 +7,52 @@ module.exports = function () {
   var port = 0;
   (this.mcserverStatus = function (input) {
     if (input.content == "!mcserver" && !input.author.bot) {
-      util
-        .status(ip, {
-          port: port,
-          enableSRV: true,
-          timeout: 5000,
-          protocolVersion: 47,
-        })
-        .then((response) => {
-          var playerNames = [];
-          for (var i = 0; i < response.samplePlayers.length; i++) {
-            playerNames[i] = response.samplePlayers[i].name;
-          }
+      if ((ip != "" || ip != null) && port != 0) {
+        util
+          .status(ip, {
+            port: port,
+            enableSRV: true,
+            timeout: 5000,
+            protocolVersion: 47,
+          })
+          .then((response) => {
+            var playerNames = [];
+            for (var i = 0; i < response.samplePlayers.length; i++) {
+              playerNames[i] = response.samplePlayers[i].name;
+            }
 
-          var mods = response.modInfo;
-          if (mods == null) {
-            mods = "none";
-          }
+            var writtenNames = "";
+            for (var i = 0; i < playerNames.length; i++) {
+              if (i == playerNames.length - 1) {
+                writtenNames += playerNames[i];
+              } else {
+                writtenNames += playerNames[i] + " | ";
+              }
+            }
 
-          input.channel.send(
-            "version: " +
-              response.version +
-              "\nonline: " +
-              response.onlinePlayers +
-              "\nplayer names: " +
-              playerNames +
-              "\nmods: " +
-              mods
-          );
-        })
-        .catch((error) => {
-          input.channel.send(
-            "incorrect server address or server does not exist"
-          );
-          throw error;
-        });
+            var mods = response.modInfo;
+            if (mods == null) {
+              mods = "none";
+            }
+
+            const embed = new Discord.MessageEmbed();
+
+            var letters = "0123456789ABCDEF";
+            var color = "#";
+            for (var i = 0; i < 6; i++) {
+              color += letters[Math.floor(Math.random() * 16)];
+            }
+            embed.setColor(color);
+            embed.setTitle("Server Status");
+            embed.setTimestamp();
+            embed.setDescription("Lemon's Minecraft server");
+            embed.addField("version", response.version, false);
+            embed.addField("players", writtenNames, false);
+            embed.addField("mods", mods, false);
+
+            input.channel.send({ embed: embed }).catch(Discord.DiscordAPIError);
+          });
+      }
     }
   }),
     (this.setmcaddress = function (input) {
@@ -52,44 +64,7 @@ module.exports = function () {
         console.log("\nIP: " + ip);
         console.log("\nPORT: " + port);
 
-        input.channel.send("server address set to " + ip);
+        input.channel.send("server address set to " + ip + ":" + port);
       }
-    }),
-    (this.getServerInfo = function () {
-      var output = "incorrect server address or server does not exist";
-      util
-        .status(ip, {
-          port: port,
-          enableSRV: true,
-          timeout: 5000,
-          protocolVersion: 47,
-        })
-        .then((response) => {
-          var playerNames = [];
-          for (var i = 0; i < response.samplePlayers.length; i++) {
-            playerNames[i] = response.samplePlayers[i].name;
-          }
-
-          var mods = response.modInfo;
-          if (mods == null) {
-            mods = "none";
-          }
-
-          output =
-            "version: " +
-            response.version +
-            "\nonline: " +
-            response.onlinePlayers +
-            "\nplayer names: " +
-            playerNames +
-            "\nmods: " +
-            mods;
-        })
-        .catch((error) => {
-          output = "incorrect server address or server does not exist";
-          // throw error;
-        });
-
-      return output;
     });
 };

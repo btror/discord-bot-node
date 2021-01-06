@@ -20,4 +20,6 @@ module.exports = {
   listCommands,
   currencyManager,
   getNetworth,
+  mcserverStatus, 
+  setmcaddress
 };
